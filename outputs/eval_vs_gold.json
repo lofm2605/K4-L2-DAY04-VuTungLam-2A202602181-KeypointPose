@@ -4,14 +4,13 @@
     "matched_people": 29,
     "missing_people": 0,
     "extra_people": 0,
-    "mean_oks": 0.9429,
+    "mean_oks": 0.9453,
     "oks50": 1.0,
     "oks75": 1.0,
     "findings": {
       "gold_khong_gan_nhan": 74,
-      "co_khac_gold": 48,
-      "lech_nhe": 7,
-      "nham_nguoi": 1
+      "co_khac_gold": 47,
+      "lech_nhe": 6
     }
   },
   "per_image": [
@@ -146,7 +145,7 @@
         {
           "gold_person": 1,
           "your_person": 2,
-          "oks": 0.8637,
+          "oks": 0.9319,
           "findings": [
             {
               "type": "gold_khong_gan_nhan",
@@ -161,34 +160,16 @@
               "detail": "Vị trí đúng nhưng bạn ghi v=2, gold ghi v=1. Không trừ điểm OKS - nhưng nếu lệch hàng loạt thì guideline chưa thống nhất."
             },
             {
-              "type": "co_khac_gold",
-              "label": "Cờ khác gold",
-              "keypoint": "right_shoulder",
-              "detail": "Vị trí đúng nhưng bạn ghi v=2, gold ghi v=1. Không trừ điểm OKS - nhưng nếu lệch hàng loạt thì guideline chưa thống nhất."
-            },
-            {
               "type": "gold_khong_gan_nhan",
               "label": "Gold không gán khớp này",
               "keypoint": "left_elbow",
               "detail": "Không bị trừ điểm: khớp gold có v=0 bị loại khỏi OKS. Xem mục lưu ý trong README."
             },
             {
-              "type": "nham_nguoi",
-              "label": "Nhầm người",
-              "keypoint": "right_elbow",
-              "detail": "Chấm này gần right_elbow của một người khác trong ảnh hơn là của người bạn đang gán."
-            },
-            {
               "type": "gold_khong_gan_nhan",
               "label": "Gold không gán khớp này",
               "keypoint": "left_wrist",
               "detail": "Không bị trừ điểm: khớp gold có v=0 bị loại khỏi OKS. Xem mục lưu ý trong README."
-            },
-            {
-              "type": "lech_nhe",
-              "label": "Lệch nhẹ",
-              "keypoint": "right_wrist",
-              "detail": "Lệch 54 px = 2.5 lần bán kính dung sai. Sửa được, ít hại."
             },
             {
               "type": "co_khac_gold",
@@ -654,7 +635,7 @@
         },
         {
           "gold_person": 2,
-          "your_person": 3,
+          "your_person": 2,
           "oks": 0.9209,
           "findings": [
             {
@@ -685,7 +666,7 @@
         },
         {
           "gold_person": 3,
-          "your_person": 2,
+          "your_person": 3,
           "oks": 0.9765,
           "findings": [
             {
@@ -723,7 +704,7 @@
       "matches": [
         {
           "gold_person": 1,
-          "your_person": 1,
+          "your_person": 2,
           "oks": 0.9854,
           "findings": [
             {
@@ -766,7 +747,7 @@
         },
         {
           "gold_person": 2,
-          "your_person": 2,
+          "your_person": 1,
           "oks": 0.9719,
           "findings": [
             {
@@ -810,7 +791,7 @@
       "matches": [
         {
           "gold_person": 1,
-          "your_person": 2,
+          "your_person": 1,
           "oks": 0.7779,
           "findings": [
             {
@@ -859,7 +840,7 @@
         },
         {
           "gold_person": 2,
-          "your_person": 1,
+          "your_person": 2,
           "oks": 0.9605,
           "findings": [
             {
