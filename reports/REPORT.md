@@ -1,6 +1,6 @@
 # Báo cáo Ngày 4 - Keypoint & Pose
 
-Họ tên: Vũ Tùng Lâm   Nhóm: ⚠️ CẦN ĐIỀN   Ngày: 2026-09-16
+Họ tên: Vũ Tùng Lâm   Nhóm: làm một mình   Ngày: 2026-09-16
 
 > Số liệu lấy từ `reports/visibility_report.md`, `outputs/visibility_report.json` và
 > `outputs/eval_vs_gold.json` do công cụ sinh ra; không ước lượng.
@@ -66,46 +66,68 @@ Không có lỗi đảo trái/phải trong toàn bộ 20 ảnh (`dao_trai_phai` 
 
 ## 3. Kiểm chéo
 
-Bạn cùng nhóm: ⚠️ CẦN ĐIỀN
-
-Khớp lệch `%v=1` nhiều nhất giữa hai bảng đếm:
-
-⚠️ CẦN ĐIỀN - chạy
-`python tools/visibility_report.py --labels dataset/labels/train --compare <nhãn của bạn cùng nhóm>`
-rồi chép số vào bảng.
-
-| Khớp | Bạn | Họ | Lệch | Nguyên nhân (guideline hay gán sai?) |
-| --- | ---: | ---: | ---: | --- |
-| | | | | |
-| | | | | |
-
-Luật mới đã bổ sung vào `GUIDELINE_MINI.md` sau khi thống nhất:
-
-- ⚠️ CẦN ĐIỀN
+Bạn cùng nhóm: không có - tôi làm bài một mình, nên chưa có bảng visibility của người khác để so
+và chưa có `reports/review_partner.md`. ⚠️ CẦN XÁC NHẬN với giảng viên cách thay thế cho phần
+kiểm chéo (ví dụ ghép cặp với người khác trong lớp).
 
 ## 4. Model
 
-⚠️ CẦN ĐIỀN - chưa có `outputs/eval_model.json`. Chạy notebook
-`notebooks/day4_pose_finetune_yolo26.ipynb` (Chặng 6), rồi chép số vào bảng.
+Số chép từ `outputs/eval_model.json` (đo trên 10 ảnh test). Chênh = sau fine-tune - gốc.
 
 | Chỉ số | yolo26n-pose gốc | Sau fine-tune | Chênh |
 | --- | ---: | ---: | ---: |
-| pose_mAP50 | | | |
-| pose_mAP50-95 | | | |
-| pose_precision | | | |
-| pose_recall | | | |
-| box_mAP50-95 | | | |
+| pose_mAP50 | 0.8450 | 0.8450 | 0.0000 |
+| pose_mAP50-95 | 0.6853 | 0.6908 | +0.0055 |
+| pose_precision | 0.9734 | 0.9792 | +0.0058 |
+| pose_recall | 0.8462 | 0.8462 | 0.0000 |
+| box_mAP50 | 0.9785 | 0.9600 | -0.0185 |
+| box_mAP50-95 | 0.8119 | 0.8041 | -0.0078 |
 
 ### Trả lời năm câu hỏi ở cuối notebook
 
-1. `pose_mAP50-95` thay đổi bao nhiêu? ⚠️ CẦN ĐIỀN
-2. `box_mAP` và `pose_mAP` chênh nhau bao nhiêu? ⚠️ CẦN ĐIỀN
-3. Một ảnh test model đoán sai - loại lỗi: ⚠️ CẦN ĐIỀN
-4. Ảnh có OKS thấp nhất giữa nhãn của bạn và model: ⚠️ CẦN ĐIỀN
-5. Ảnh gán tệ nhất có cũng là ảnh model đoán tệ nhất? Ảnh gán tệ nhất theo gold là
-   `train_03.jpg` trước rework (OKS 0.864, `nham_nguoi`); sau rework thấp nhất là
-   `train_15.jpg` người #1 (OKS 0.778, lệch nhẹ ở `left_knee`, `left_ankle`, `right_ankle`).
-   So với model: ⚠️ CẦN ĐIỀN
+1. `pose_mAP50-95` **tăng nhẹ 0.0055** (0.6853 → 0.6908, khoảng +0.8%), không giảm.
+   `pose_mAP50` và `pose_recall` giữ nguyên, nên model vẫn tìm ra đúng số người như trước;
+   phần tăng nằm ở độ chính xác vị trí khớp ở ngưỡng OKS chặt, kèm `pose_precision` +0.0058.
+   Điều 20 ảnh có thể dạy thêm so với COCO: nhãn của tôi đặt chấm cho khớp bị che (v=1 là
+   126/493 điểm, khoảng 26%), trong khi COCO thường để v=0 cho khớp không gán. Cái giá phải
+   trả là `box_mAP` giảm (mAP50 -0.0185, mAP50-95 -0.0078): fine-tune trên 20 ảnh kéo nhẹ
+   đầu dò box khỏi trọng số COCO. Với 10 ảnh test, mức chênh ±0.01 rất có thể chỉ là nhiễu,
+   nên không kết luận model tốt lên rõ rệt.
+
+2. Sau fine-tune, `box_mAP50-95` 0.8041 so với `pose_mAP50-95` 0.6908: **chênh 0.1133**
+   (trước fine-tune chênh 0.1266). Ở mức 50: box 0.9600 so với pose 0.8450, chênh 0.1150.
+   **Model tìm người dễ hơn tìm khớp.** Một box chỉ cần 4 cạnh ôm đúng thân người, còn pose
+   phải đặt đúng cả 17 điểm; OKS phạt nặng các khớp nhỏ như mắt, tai, cổ tay và các khớp bị
+   che, trong khi box vẫn đúng dù có khớp bên trong bị che.
+
+> Lưu ý: Colab clone fork ở commit trước bản export cuối (nhãn train v=2 341 / v=1 125),
+> tức model được fine-tune và so trên nhãn **trước rework** - `train_03` khi đó vẫn còn lỗi
+> `nham_nguoi`.
+
+3. **`test_07.jpg`** (người phụ nữ ngồi sau quầy, trước mặt là lồng kính bánh): model đặt
+   `left_hip` / `right_hip` trên **mặt bàn phía trước lồng bánh**, nằm ngoài cả box người
+   mà model vừa dự đoán. Thân dưới của người này bị quầy che hoàn toàn, nên hông phải nằm
+   sau quầy, không thể ở trên mặt bàn gần camera. Đây là lỗi **trượt hẳn**: điểm rơi vào
+   vật khác, không phải lệch nhẹ quanh đúng khớp. Nhận xét dựa trên lưới ảnh ở mục 5 của
+   notebook (ảnh thu nhỏ). Ngoài ra ở `test_02.jpg`, model phát hiện thêm một "person" 0.31
+   rất nhỏ trên bờ tường, trong khi nhãn test chỉ có 1 người.
+
+4. OKS thấp nhất giữa nhãn của tôi và model là **`train_06`: 0.672** (người đi mô tô nhìn
+   từ phía sau, đội mũ bảo hiểm kín đầu, nửa thân phải bị thùng xe che). **Nhãn của tôi đúng
+   hơn**: skeleton này đạt OKS **0.955** so với gold, không có lỗi phân loại nào. Ảnh khó cho
+   model vì mặt không lộ (mắt, mũi, tai đều bị mũ che, phải đặt ước lượng với v=1) và nhìn
+   từ sau lưng, nên trái/phải chỉ suy ra được từ vai và tay. Cả hai điều này COCO dạy ít.
+   Vì model cho điểm tin cậy thấp ở khớp bị che, notebook đổi các khớp đó thành v=0, và vì
+   vậy OKS giữa model và nhãn tụt xuống.
+
+5. **Có một phần.** Ảnh tôi gán tệ nhất theo gold (trước rework) là `train_03` (OKS 0.864,
+   `nham_nguoi` ở `right_elbow`). Đó cũng là ảnh có OKS model-vs-nhãn **thấp thứ hai (0.725)**,
+   và là ảnh lệch số người nhiều nhất (model 4 / tôi 2). Nhưng ảnh model lệch nhất
+   (`train_06`) lại là ảnh tôi gán tốt (0.955 vs gold). Điều đó cho thấy `train_03` khó thật
+   sự: hai người đứng chồng lên nhau, tay người sau bị người trước che, và còn các vật dễ bị
+   nhận nhầm là người (con búp bê dưới đất, xe đạp). Cả người lẫn model đều dễ gán nhầm
+   điểm sang cơ thể bên cạnh. Ảnh kiểu này cần luật "gán xong một người rồi mới sang người
+   kế tiếp" trong guideline, và nên được kiểm chéo kỹ nhất.
 
 ## 5. Một rule evidence bạn đã dùng
 
