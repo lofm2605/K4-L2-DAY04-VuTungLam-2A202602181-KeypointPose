@@ -3,8 +3,7 @@
 Họ tên: Vũ Tùng Lâm   Nhóm: làm một mình   Ngày: 2026-09-16
 
 > Số liệu lấy từ `reports/visibility_report.md`, `outputs/visibility_report.json` và
-> `outputs/eval_vs_gold.json` do công cụ sinh ra; không ước lượng.
-> Các chỗ đánh dấu ⚠️ CẦN ĐIỀN cần số liệu hoặc nhận định của chính người gán.
+> `outputs/eval_vs_gold.json`, `outputs/eval_model.json` do công cụ sinh ra; không ước lượng.
 
 ## 1. Nhãn của tôi
 
@@ -23,9 +22,12 @@ Ba khớp có `%v=1` cao nhất (chép từ `reports/visibility_report.md`):
 
 Chúng có đúng là những khớp bạn thấy khó gán nhất không? Nếu không, giải thích.
 
-⚠️ CẦN ĐIỀN (2-4 câu). Gợi ý từ số liệu: tai và mắt có `%v=1` cao vì hay bị tóc, mũ hoặc
-góc nghiêng mặt che (hay bị che). Nhưng khớp có vị trí khó xác định lại là hông: trong
-`outputs/eval_vs_gold.json`, hông có 10 lần lệch cờ so với gold, tai có 13 lần (số trước rework).
+Chỉ đúng một nửa. Tai và mắt có `%v=1` cao vì **hay bị che** (tóc, mũ bảo hiểm ở `train_04`,
+`train_06`, người quay đầu ở `train_02`), nhưng khi đã quyết là v=1 thì đặt chấm không khó:
+tai nằm ngang tầm mắt, sau góc hàm. Khớp tôi thấy **khó xác định vị trí** nhất lại là đầu chi
+bị che và hông: cả 6 lỗi `lech_nhe` còn lại đều ở cổ tay, gối, cổ chân (ví dụ `train_15`
+người #1 lệch 44-59 px ở gối và cổ chân bị xe che). Hông thì lệch cờ với gold 10 lần theo
+cả hai chiều, vì quần áo che mất mốc giải phẫu.
 
 ## 2. Chấm với gold
 
@@ -66,9 +68,28 @@ Không có lỗi đảo trái/phải trong toàn bộ 20 ảnh (`dao_trai_phai` 
 
 ## 3. Kiểm chéo
 
-Bạn cùng nhóm: không có - tôi làm bài một mình, nên chưa có bảng visibility của người khác để so
-và chưa có `reports/review_partner.md`. ⚠️ CẦN XÁC NHẬN với giảng viên cách thay thế cho phần
-kiểm chéo (ví dụ ghép cặp với người khác trong lớp).
+Bạn cùng nhóm: **không có** - tôi làm bài một mình, nên không chạy được
+`visibility_report.py --compare` và không có bảng của người khác để đặt cạnh.
+
+Thay cho kiểm chéo, tôi đã **tự kiểm** theo đúng checklist (`reports/REVIEWER_CHECKLIST.md`, đạt
+10/11 mục, mục 9 để trống vì lý do trên) và ghi lỗi vào `reports/review_partner.md`. Để thay
+cho bảng so với bạn cùng nhóm, tôi so cờ visibility với **gold** (`co_khac_gold` trong
+`outputs/eval_vs_gold.json`, trước rework):
+
+| Khớp | Tôi khác gold | Chiều lệch | Nguyên nhân (guideline hay gán sai?) |
+| --- | ---: | --- | --- |
+| Tai (`left_ear` + `right_ear`) | 13 lần | 9 lần tôi v=1 / gold v=2; 4 lần ngược lại | Guideline chưa rõ: chưa có luật "thấy vành tai hay không" |
+| Hông (`left_hip` + `right_hip`) | 10 lần | 5 lần tôi v=1 / gold v=2; 5 lần ngược lại | Guideline chưa rõ: chưa tách "quần áo phủ" với "vật khác che" |
+
+Lệch đều theo cả hai chiều ở cùng một khớp, nên đây là thiếu luật, không phải một lần gán sai.
+Tự kiểm không thay được kiểm chéo thật; nếu giảng viên ghép cặp, phần so sánh sẽ bổ sung sau.
+
+Luật mới đã bổ sung vào `GUIDELINE_MINI.md` sau khi thống nhất:
+
+- **Hông:** chỉ có quần áo phủ, không vật/người nào chắn phía trước → v=2, đặt ở chỗ đùi nối
+  thân; bị xe, bàn, túi hoặc người khác che → v=1.
+- **Tai:** không thấy vành tai (tóc, mũ bảo hiểm, quay mặt) → v=1, đặt ngang tầm mắt sau góc
+  hàm; chỉ v=2 khi thấy rõ vành tai.
 
 ## 4. Model
 
@@ -131,7 +152,10 @@ Số chép từ `outputs/eval_model.json` (đo trên 10 ảnh test). Chênh = sa
 
 ## 5. Một rule evidence bạn đã dùng
 
-⚠️ CẦN ĐIỀN (3-5 câu): ảnh + người + khớp, bằng chứng nhìn thấy, vì sao chọn v=1 hay v=0.
-Gợi ý ứng viên: trong `train_04.jpg`, người #1 có 7 khớp v=0 và người #2 có 4 khớp v=0;
-`check_pose_labels.py` cảnh báo cả hai người đều nằm gọn trong ảnh. Cần mở ảnh xem các khớp đó thật sự ra ngoài khung
-(giữ v=0) hay chỉ bị che (đổi sang v=1).
+`train_04.jpg`, người thứ 2 (người đội mũ bảo hiểm ngồi trên xe máy, bên phải), `left_knee` và
+`right_knee`. Người này ngồi trên xe, hông đã ở y ≈ 405 px trên ảnh cao 457 px, phía dưới chỉ
+còn tay lái và đầu xe. Tư thế ngồi làm đùi đi xuống và ra trước, nên nối từ hông theo hướng đùi
+thì đầu gối rơi xuống **dưới mép dưới ảnh**, không nằm sau xe trong khung. Vì vậy tôi chọn
+**v=0** (ra ngoài khung) chứ không phải v=1 (bị che nhưng còn trong khung), dù
+`check_pose_labels.py` cảnh báo người này "nằm gọn giữa ảnh" - cảnh báo chỉ dựa vào khung bao,
+không nhìn mép ảnh. Gold cũng để v=0 ở cả bốn khớp gối và cổ chân của người này.
